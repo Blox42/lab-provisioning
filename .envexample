@@ -1,0 +1,14 @@
+WG_LOGIN_USER=rkeller
+WG_LOGIN_PASS=SuperGeheim
+
+CLIENT_NAME=duser
+CLIENT_EMAIL=demo.user@blox42.rocks
+
+SMTP_HOST=mail.blox42.rocks
+SMTP_PORT=587
+SMTP_USER=vpn@blox42.rocks
+SMTP_PASS=SuperGeheimesSMTPPasswort
+FROM_EMAIL=automation@blox42.rocks
+
+OUT_DIR=/out
+ATTACH_QR=false
