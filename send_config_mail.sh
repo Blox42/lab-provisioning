@@ -49,6 +49,7 @@ CLIENT_EMAIL="$1"; shift
 ATTACH_QR=false
 OUT_DIR="./out"
 SUBJECT="WireGuard-Konfiguration / WireGuard configuration for ${CLIENT_NAME}"
+echo "Starting Mailflow"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -135,6 +136,6 @@ curl --url "${PROTO}://${SMTP_HOST}:${SMTP_PORT}" \
      --ssl-reqd \
      --connect-timeout 10 \
      --max-time 60 \
-     -sS
+     -sSvvv || { echo "Fehler beim Mailversand" >&2; exit 1; }
 
 echo "E-Mail an ${CLIENT_EMAIL} versendet. Anhänge: ${CONF_BASENAME}$( $ATTACH_QR && printf ', %s' "$PNG_BASENAME" || printf '' )"
