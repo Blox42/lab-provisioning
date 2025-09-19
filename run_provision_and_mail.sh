@@ -58,6 +58,17 @@ if [ -n "${EMAIL_FROM_ARG}" ] && [ "${EMAIL_FROM_ARG#-}" = "${EMAIL_FROM_ARG}" ]
   shift
 fi
 
+case "$CLIENT_EMAIL" in
+  *=*)
+    CLIENT_EMAIL="${CLIENT_EMAIL#*=}"
+    ;;
+esac
+case "$CLIENT_NAME" in
+  *=*)
+    CLIENT_NAME="${CLIENT_NAME#*=}"
+    ;;
+esac
+
 # Pflicht-ENV prüfen (nachdem ggf. Positionals gesetzt wurden)
 need_env() {
   eval "[ \"\${$1:-}\" != '' ]" || { echo "Fehlende Variable: $1 (als ENV oder Positionsargument übergeben)" >&2; exit 2; }
