@@ -242,6 +242,7 @@ EOF
         echo "Invited user did not appear in the directory after waiting." >&2
         exit 6
     fi
+fi
 # 2) Find group "all-admins"
 filter_groups="$(printf "displayName eq '%s'" "all-admins" | jq -sRr @uri)"
 group_filter="https://graph.microsoft.com/v1.0/groups?\$filter=$filter_groups"
