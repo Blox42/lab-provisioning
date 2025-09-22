@@ -136,6 +136,6 @@ curl --url "${PROTO}://${SMTP_HOST}:${SMTP_PORT}" \
      --ssl-reqd \
      --connect-timeout 10 \
      --max-time 60 \
-     -sSvvv || { echo "Fehler beim Mailversand" >&2; exit 1; }
+     -sS || { echo "Fehler beim Mailversand" >&2; exit 1; }
 
 echo "E-Mail an ${CLIENT_EMAIL} versendet. Anhänge: ${CONF_BASENAME}$( $ATTACH_QR && printf ', %s' "$PNG_BASENAME" || printf '' )"
