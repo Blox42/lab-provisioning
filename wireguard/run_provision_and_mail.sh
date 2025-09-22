@@ -83,6 +83,15 @@ need_env SMTP_USER
 need_env SMTP_PASS
 need_env FROM_EMAIL
 
+# In passenden Pfad wechseln (wg-Verzeichnis)
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+if command -v readlink >/dev/null 2>&1; then
+  TARGET="$(readlink -f -- "$0" 2>/dev/null || echo "$0")"
+  SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$TARGET")" && pwd)"
+fi
+
+echo "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit 1
 # Skripte prüfen
 [ -x "$PROV_SCRIPT" ] || { echo "Provisioning-Skript nicht ausführbar: $PROV_SCRIPT" >&2; exit 2; }
 [ -x "$MAIL_SCRIPT" ] || { echo "Mail-Skript nicht ausführbar: $MAIL_SCRIPT" >&2; exit 2; }
