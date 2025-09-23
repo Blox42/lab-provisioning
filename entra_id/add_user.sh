@@ -76,6 +76,64 @@ INVITE_REDIRECT_URL="https://myapps.microsoft.com"
 
 export $(grep -v '^#' .env | xargs)
 
+# Map Semaphore survey-style vars to expected names
+assign_if_empty() {
+    local target="$1"; shift
+    if [ -n "${!target:-}" ]; then return 0; fi
+    local alt val
+    for alt in "$@"; do
+        val="${!alt-}"
+        if [ -n "${val:-}" ]; then
+            export "$target=$val"
+            return 0
+        fi
+    done
+}
+# Accept KEY=VALUE args (e.g., from Semaphore) and export them, leaving only real options for getopts
+remaining=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        *=*)
+            k="${1%%=*}"
+            v="${1#*=}"
+            # Normalize key to uppercase and underscores
+            k_norm="$(printf '%s' "$k" | tr '[:lower:]-' '[:upper:]_')"
+            if [[ "$k_norm" =~ ^[A-Z_][A-Z0-9_]*$ ]]; then
+                export "$k_norm=$v"
+            fi
+            shift
+            ;;
+        -u|-n|-t|-r)
+            # Preserve known options and their values for getopts
+            remaining+=("$1")
+            if [ $# -ge 2 ]; then
+                remaining+=("$2")
+                shift 2
+            else 
+                shift
+            fi
+            ;;
+        -*)
+            # Preserve any other dash options as-is
+            remaining+=("$1")
+            shift
+            ;;
+        *)
+            # Ignore bare non-option args
+            shift
+            ;;
+    esac
+done
+set -- "${remaining[@]}"
+# Common mappings (add more if needed)
+assign_if_empty CLIENT_ID           CLIENT_ID CLIENTID VARIABLE_CLIENTID clientId
+assign_if_empty CLIENT_SECRET       CLIENT_SECRET CLIENTSECRET VARIABLE_CLIENTSECRET clientSecret
+assign_if_empty TENANT_ID           TENANT_ID TENANTID VARIABLE_TENANTID AZURE_TENANT_ID tenantId
+assign_if_empty GRAPH_TOKEN         GRAPH_TOKEN VARIABLE_GRAPH_TOKEN graphToken
+assign_if_empty INVITE_REDIRECT_URL INVITE_REDIRECT_URL INVITEREDIRECTURL VARIABLE_INVITEREDIRECTURL inviteRedirectUrl
+assign_if_empty UPN                 UPN USERPRINCIPALNAME USER_EMAIL USEREMAIL VARIABLE_USERPRINCIPALNAME userPrincipalName MAILADDRESS
+assign_if_empty DISPLAY_NAME        DISPLAY_NAME DISPLAYNAME VARIABLE_DISPLAYNAME displayName
+assign_if_empty GROUPNAME           GROUPNAME GROUP_NAME GROUPNAME VARIABLE_GROUPNAME groupName
 
 while getopts ":u:n:t:r:" opt; do
     case ${opt} in
