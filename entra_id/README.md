@@ -8,6 +8,25 @@ It uses only curl and jq to call Microsoft Graph v1.0 REST APIs (no Azure CLI re
 
 ---
 
+## Quick Usage
+
+- With a pre-acquired token:
+```
+GRAPH_TOKEN="<access-token>" ./add_user.sh -u user@domain.com -n "User Name"
+```
+
+- With client credentials (app-only):
+```
+TENANT_ID="<tenant-id>" \
+CLIENT_ID="<app-client-id>" \
+CLIENT_SECRET="<client-secret>" \
+./add_user.sh -u user@domain.com
+```
+
+The script can also auto-load variables from a local `.env`.
+
+---
+
 ## Prerequisites
 
 - Bash (set -euo pipefail compatible)
